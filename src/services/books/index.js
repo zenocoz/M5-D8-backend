@@ -222,9 +222,7 @@ booksRouter.delete("/:bookId/comments/:commentId", async (req, res, next) => {
 //delete single comment from /comments
 booksRouter.delete("/comments/:commentId", async (req, res, next) => {
   try {
-    console.log("OKAY")
     const books = await getBooks()
-
     const booksWithComments = books.filter((book) =>
       book.hasOwnProperty("comments")
     )
@@ -233,7 +231,6 @@ booksRouter.delete("/comments/:commentId", async (req, res, next) => {
       // const allComments = [].concat(
       //   ...booksWithComments.map(({ comments }) => comments)
       // )
-
       let alteredComment = {}
       let alteredComments = []
       for (let i = 0; i < booksWithComments.length; i++) {
@@ -248,16 +245,16 @@ booksRouter.delete("/comments/:commentId", async (req, res, next) => {
       let commentTodelete = alteredComments.find(
         (comment) => comment.commentId === req.params.commentId
       )
-      console.log(commentTodelete.commentId)
-      console.log(commentTodelete.bookAsin)
+      // console.log(commentTodelete.commentId)
+      // console.log(commentTodelete.bookAsin)
 
-      const singleBook = books.find(
+      const foundBook = books.find(
         (book) => book.asin === commentTodelete.bookAsin
       )
-      const filteredComments = singleBook.comments.filter(
+      const filteredComments = foundBook.comments.filter(
         (comment) => comment.commentId !== commentTodelete.commentId
       )
-      singleBook.comments = filteredComments
+      foundBook.comments = filteredComments
 
       await writeBooks(books)
       res.status(204).send()
