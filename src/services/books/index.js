@@ -167,7 +167,10 @@ booksRouter.get("/:bookId/comments", async (req, res, next) => {
     const books = await getBooks()
     const bookIndex = books.findIndex((book) => book.asin === req.params.bookId)
     if (bookIndex !== -1) {
-      if (!books[bookIndex].hasOwnProperty("comments")) {
+      if (
+        !books[bookIndex].hasOwnProperty("comments") ||
+        books[bookIndex].comments.length === 0
+      ) {
         const err = new Error("there are no comments for this book")
         err.httpStatusCode = 404
         next(err)
@@ -185,6 +188,34 @@ booksRouter.get("/:bookId/comments", async (req, res, next) => {
 })
 
 //delete comment
-booksRouter.delete("/comments/:commentId", async (req, res, next) => {})
+booksRouter.delete("/:bookId/comments/:commentId", async (req, res, next) => {
+  try {
+    const books = await getBooks()
+    const singleBook = books.find((book) => book.asin === req.params.bookId)
+    if (!singleBook) {
+      const err = new Error("book not found")
+      err.httpStatusCode = 404
+      next(err)
+    } else {
+      if (
+        !singleBook.hasOwnProperty("comments") ||
+        singleBook.comments.length === 0
+      ) {
+        const err = new Error()
+        err.message = "There are no comments for this book"
+        err.httpStatusCode = 404
+        next(err)
+      } else {
+        const filteredComments = singleBook.comments.filter(
+          (comment) => comment.commentId !== req.params.commentId
+        )
+        await writeBooks(filteredComments)
+        res.status(204).send()
+      }
+    }
+  } catch (error) {
+    next(error)
+  }
+})
 
 module.exports = booksRouter
