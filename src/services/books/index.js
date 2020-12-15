@@ -1,4 +1,6 @@
+const { Router } = require("express")
 const express = require("express")
+const uniqid = require("uniqid")
 
 const { getBooks, writeBooks } = require("../../fsUtilities")
 
@@ -10,7 +12,7 @@ booksRouter.get("/", async (req, res, next) => {
 
     if (req.query && req.query.category) {
       const filteredBooks = books.filter(
-        book =>
+        (book) =>
           book.hasOwnProperty("category") &&
           book.category === req.query.category
       )
@@ -28,7 +30,7 @@ booksRouter.get("/:asin", async (req, res, next) => {
   try {
     const books = await getBooks()
 
-    const bookFound = books.find(book => book.asin === req.params.asin)
+    const bookFound = books.find((book) => book.asin === req.params.asin)
 
     if (bookFound) {
       res.send(bookFound)
@@ -54,7 +56,7 @@ booksRouter.post("/", async (req, res, next) => {
     } else {
       const books = await getBooks()
 
-      const asinFound = books.find(book => book.asin === req.body.asin)
+      const asinFound = books.find((book) => book.asin === req.body.asin)
 
       if (asinFound) {
         const error = new Error()
@@ -79,7 +81,7 @@ booksRouter.put("/:asin", async (req, res, next) => {
     const validatedData = matchedData(req)
     const books = await getBooks()
 
-    const bookIndex = books.findIndex(book => book.asin === req.params.asin)
+    const bookIndex = books.findIndex((book) => book.asin === req.params.asin)
 
     if (bookIndex !== -1) {
       // book found
@@ -106,10 +108,12 @@ booksRouter.delete("/:asin", async (req, res, next) => {
   try {
     const books = await getBooks()
 
-    const bookFound = books.find(book => book.asin === req.params.asin)
+    const bookFound = books.find((book) => book.asin === req.params.asin)
 
     if (bookFound) {
-      const filteredBooks = books.filter(book => book.asin !== req.params.asin)
+      const filteredBooks = books.filter(
+        (book) => book.asin !== req.params.asin
+      )
 
       await writeBooks(filteredBooks)
       res.status(204).send()
@@ -123,5 +127,37 @@ booksRouter.delete("/:asin", async (req, res, next) => {
     next(error)
   }
 })
+
+//Comments
+
+//Add Comment for book id
+booksRouter.post("/:bookId/comments", async (req, res, next) => {
+  try {
+    const books = await getBooks()
+    const bookIndex = books.findIndex((book) => book.asin === req.params.bookId)
+    if (bookIndex !== -1) {
+      const newComment = {
+        ...req.body,
+        commentId: uniqid(),
+        createdAt: new Date(),
+      }
+      books[bookIndex].comments.push(newComment)
+      await writeBooks(books)
+      res.send(books)
+    } else {
+      const err = new Error("book asin not found")
+      err.httpStatusCode = 404
+      next(err)
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+//Get all the comments for book id
+booksRouter.get("/:bookId/comments", async (req, res, next) => {})
+
+//delete comment
+booksRouter.delete("/comments/:commentId", async (req, res, next) => {})
 
 module.exports = booksRouter
