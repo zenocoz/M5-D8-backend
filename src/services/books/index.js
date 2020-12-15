@@ -242,20 +242,14 @@ booksRouter.delete("/comments/:commentId", async (req, res, next) => {
             ...booksWithComments[i].comments[j],
             bookAsin: booksWithComments[i].asin,
           }
-          console.log(alteredComment)
           alteredComments.push(alteredComment)
-
-          // console.log(booksWithComments[i].comments[j])
         }
       }
-
       let commentTodelete = alteredComments.find(
         (comment) => comment.commentId === req.params.commentId
       )
       console.log(commentTodelete.commentId)
       console.log(commentTodelete.bookAsin)
-
-      //delete commetn
 
       const singleBook = books.find(
         (book) => book.asin === commentTodelete.bookAsin
@@ -266,6 +260,7 @@ booksRouter.delete("/comments/:commentId", async (req, res, next) => {
       singleBook.comments = filteredComments
 
       await writeBooks(books)
+      res.status(204).send()
     }
   } catch (error) {
     next(error)

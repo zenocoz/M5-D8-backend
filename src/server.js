@@ -37,7 +37,7 @@ server.use(cors(corsOptions)) // CROSS ORIGIN RESOURCE SHARING
 //ROUTES
 
 server.use("/books", booksRoutes)
-server.use("/", booksRoutes)
+// server.use("/", booksRoutes)
 
 // ERROR HANDLERS
 server.use(badRequestHandler)

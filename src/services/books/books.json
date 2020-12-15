@@ -17,12 +17,6 @@
                 "text": "who writes this stuff?",
                 "commentId": "n7879czwkiq1qxe4",
                 "createdAt": "2020-12-15T13:53:40.491Z"
-            },
-            {
-                "username": "jonathan",
-                "text": "clearly the work of a hack",
-                "commentId": "n78791bkkiq1rnbk",
-                "createdAt": "2020-12-15T13:54:14.095Z"
             }
         ]
     },
@@ -60,21 +54,24 @@
         "title": "The Battle of Evernight - Special Edition: The Bitterbynde Book #3 (The Bitterbynde Trilogy)",
         "img": "https://images-na.ssl-images-amazon.com/images/I/51vw%2Bn7xZCL.jpg",
         "price": 9.6,
-        "category": "scifi"
+        "category": "scifi",
+        "comments": []
     },
     {
         "asin": "1492667137",
         "title": "Nightchaser",
         "img": "https://images-na.ssl-images-amazon.com/images/I/514%2BSppz8AL.jpg",
         "price": 4.84,
-        "category": "scifi"
+        "category": "scifi",
+        "comments": []
     },
     {
         "asin": "1635551226",
         "title": "Proxima Five",
         "img": "https://images-na.ssl-images-amazon.com/images/I/61pDS5vOIdL.jpg",
         "price": 16.34,
-        "category": "scifi"
+        "category": "scifi",
+        "comments": []
     },
     {
         "asin": "1773840509",
