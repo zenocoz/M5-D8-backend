@@ -187,7 +187,7 @@ booksRouter.get("/:bookId/comments", async (req, res, next) => {
   }
 })
 
-//delete comment
+//delete comment from single book
 booksRouter.delete("/:bookId/comments/:commentId", async (req, res, next) => {
   try {
     const books = await getBooks()
@@ -209,10 +209,19 @@ booksRouter.delete("/:bookId/comments/:commentId", async (req, res, next) => {
         const filteredComments = singleBook.comments.filter(
           (comment) => comment.commentId !== req.params.commentId
         )
-        await writeBooks(filteredComments)
+        singleBook.comments = filteredComments
+        await writeBooks(books)
         res.status(204).send()
       }
     }
+  } catch (error) {
+    next(error)
+  }
+})
+
+//delete single comment from /comments
+booksRouter.delete("/comments/:commentId", async (req, res, next) => {
+  try {
   } catch (error) {
     next(error)
   }
