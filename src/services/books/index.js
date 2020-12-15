@@ -222,6 +222,51 @@ booksRouter.delete("/:bookId/comments/:commentId", async (req, res, next) => {
 //delete single comment from /comments
 booksRouter.delete("/comments/:commentId", async (req, res, next) => {
   try {
+    console.log("OKAY")
+    const books = await getBooks()
+
+    const booksWithComments = books.filter((book) =>
+      book.hasOwnProperty("comments")
+    )
+
+    if (booksWithComments) {
+      // const allComments = [].concat(
+      //   ...booksWithComments.map(({ comments }) => comments)
+      // )
+
+      let alteredComment = {}
+      let alteredComments = []
+      for (let i = 0; i < booksWithComments.length; i++) {
+        for (let j = 0; j < booksWithComments[i].comments.length; j++) {
+          alteredComment = {
+            ...booksWithComments[i].comments[j],
+            bookAsin: booksWithComments[i].asin,
+          }
+          console.log(alteredComment)
+          alteredComments.push(alteredComment)
+
+          // console.log(booksWithComments[i].comments[j])
+        }
+      }
+
+      let commentTodelete = alteredComments.find(
+        (comment) => comment.commentId === req.params.commentId
+      )
+      console.log(commentTodelete.commentId)
+      console.log(commentTodelete.bookAsin)
+
+      //delete commetn
+
+      const singleBook = books.find(
+        (book) => book.asin === commentTodelete.bookAsin
+      )
+      const filteredComments = singleBook.comments.filter(
+        (comment) => comment.commentId !== commentTodelete.commentId
+      )
+      singleBook.comments = filteredComments
+
+      await writeBooks(books)
+    }
   } catch (error) {
     next(error)
   }
