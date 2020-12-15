@@ -7,7 +7,7 @@ const badRequestHandler = (err, req, res, next) => {
 
 const notFoundHandler = (err, req, res, next) => {
   if (err.httpStatusCode === 404) {
-    res.status(404).send("Resource not found!")
+    res.status(404).send(err.message)
   }
   next(err)
 }

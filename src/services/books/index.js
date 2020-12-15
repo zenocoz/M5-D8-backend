@@ -135,15 +135,22 @@ booksRouter.post("/:bookId/comments", async (req, res, next) => {
   try {
     const books = await getBooks()
     const bookIndex = books.findIndex((book) => book.asin === req.params.bookId)
+
     if (bookIndex !== -1) {
       const newComment = {
         ...req.body,
         commentId: uniqid(),
         createdAt: new Date(),
       }
-      books[bookIndex].comments.push(newComment)
+
+      if (!books[bookIndex].hasOwnProperty("comments")) {
+        books[bookIndex].comments = []
+        books[bookIndex].comments.push(newComment)
+      } else {
+        books[bookIndex].comments.push(newComment)
+      }
       await writeBooks(books)
-      res.send(books)
+      res.status(201).send({ "comment created with Id:": newComment.commentId })
     } else {
       const err = new Error("book asin not found")
       err.httpStatusCode = 404
@@ -155,7 +162,27 @@ booksRouter.post("/:bookId/comments", async (req, res, next) => {
 })
 
 //Get all the comments for book id
-booksRouter.get("/:bookId/comments", async (req, res, next) => {})
+booksRouter.get("/:bookId/comments", async (req, res, next) => {
+  try {
+    const books = await getBooks()
+    const bookIndex = books.findIndex((book) => book.asin === req.params.bookId)
+    if (bookIndex !== -1) {
+      if (!books[bookIndex].hasOwnProperty("comments")) {
+        const err = new Error("there are no comments for this book")
+        err.httpStatusCode = 404
+        next(err)
+      } else {
+        res.status(201).send(books[bookIndex].comments)
+      }
+    } else {
+      const err = new Error("book asin not found")
+      err.httpStatusCode = 404
+      next(err)
+    }
+  } catch (error) {
+    next(error)
+  }
+})
 
 //delete comment
 booksRouter.delete("/comments/:commentId", async (req, res, next) => {})

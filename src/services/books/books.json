@@ -4,7 +4,39 @@
         "title": "Pandemic (The Extinction Files, Book 1)",
         "img": "https://images-na.ssl-images-amazon.com/images/I/91xrEMcvmQL.jpg",
         "price": 7.81,
-        "category": "scifi"
+        "category": "scifi",
+        "comments": [
+            {
+                "username": "fede",
+                "text": "i am not gonna read it",
+                "commentId": "n7879e74kiq1od5t",
+                "createdAt": "2020-12-15T13:51:40.960Z"
+            },
+            {
+                "username": "gino",
+                "text": "not impressed",
+                "commentId": "n7879em8kiq1pg51",
+                "createdAt": "2020-12-15T13:52:31.476Z"
+            },
+            {
+                "username": "sarah",
+                "text": "I am gonna return it! Not what I had expected!",
+                "commentId": "n7879fzkkiq1q8kt",
+                "createdAt": "2020-12-15T13:53:08.332Z"
+            },
+            {
+                "username": "carcarlo",
+                "text": "who writes this stuff?",
+                "commentId": "n7879czwkiq1qxe4",
+                "createdAt": "2020-12-15T13:53:40.491Z"
+            },
+            {
+                "username": "jonathan",
+                "text": "clearly the work of a hack",
+                "commentId": "n78791bkkiq1rnbk",
+                "createdAt": "2020-12-15T13:54:14.095Z"
+            }
+        ]
     },
     {
         "asin": "0425264041",
