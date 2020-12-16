@@ -5,6 +5,7 @@ const sgMail = require("@sendgrid/mail")
 const { createReadStream } = require("fs-extra")
 const { Transform } = require("json2csv")
 const { pipeline } = require("stream")
+const { join } = require("path")
 
 const { getAttendees, writeAttendees } = require("../../fsUtilities")
 
@@ -65,7 +66,9 @@ attendeesRouter.get("/csv", async (req, res, next) => {
         console.log("Done")
       }
     })
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 })
 
 module.exports = attendeesRouter
