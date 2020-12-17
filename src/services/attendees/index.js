@@ -23,6 +23,16 @@ attendeesRouter.post("/", async (req, res, next) => {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
     const attendees = await getAttendees()
+
+    const msg = {
+      to: `${req.body.email}`,
+      from: "federico.soncini@gmail.com",
+      subject: "Sending with Twilio SendGrid is Fun",
+      text: "and easy to do anywhere, even with Node.js",
+      html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+    }
+    await sgMail.send(msg)
+
     const newAttendee = {
       ...req.body,
       ID: uniqid(),
@@ -31,22 +41,29 @@ attendeesRouter.post("/", async (req, res, next) => {
     attendees.push(newAttendee)
     await writeAttendees(attendees)
 
-    const msg = {
-      to: newAttendee.email,
-      from: "federico.soncini@gmail.com",
-      subject: "Sending with Twilio SendGrid is Fun",
-      text: "and easy to do anywhere, even with Node.js",
-      html: "<strong>and easy to do anywhere, even with Node.js</strong>",
-    }
-    console.log(msg)
-
-    await sgMail.send(msg)
-
     res.send(attendees)
   } catch (error) {
     console.log(error)
     const err = new Error("An error occurred while reading from the file")
     next(err)
+  }
+})
+
+attendeesRouter.post("/sendEmail", async (req, res, next) => {
+  try {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+    const msg = {
+      to: "soncini@icloud.com",
+      from: "federico.soncini@gmail.com",
+      subject: "Sending with Twilio SendGrid is Fun",
+      text: "and easy to do anywhere, even with Node.js",
+      html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+    }
+    await sgMail.send(msg)
+    res.send("sent")
+  } catch (error) {
+    next(error)
   }
 })
 
