@@ -2,10 +2,21 @@ const { Router } = require("express")
 const express = require("express")
 const uniqid = require("uniqid")
 const sgMail = require("@sendgrid/mail")
-const { createReadStream } = require("fs-extra")
+const { createReadStream, copySync } = require("fs-extra")
 const { Transform } = require("json2csv")
 const { pipeline } = require("stream")
 const { join } = require("path")
+const PdfPrinter = require("pdfmake")
+let fonts = {
+  Courier: {
+    normal: "Courier",
+    bold: "Courier-Bold",
+    italics: "Courier-Oblique",
+    bolditalics: "Courier-BoldOblique",
+  },
+}
+const printer = new PdfPrinter(fonts)
+const fs = require("fs")
 
 const { getAttendees, writeAttendees } = require("../../fsUtilities")
 
@@ -87,5 +98,85 @@ attendeesRouter.get("/csv", async (req, res, next) => {
     console.log(error)
   }
 })
+
+// attendeesRouter.post("/:id/createPdf", async (req, res, next) => {
+//   const attendees = await getAttendees()
+//   const attendee = attendees.find((attendee) => attendee.ID === req.params.id)
+//   const attendeeDetails = {
+//     content: {
+//       name: attendee.name,
+//       surname: attendee.surname,
+//       email: attendee.email,
+//       id: attendee.ID,
+//     },
+//     defaultStyle: {
+//       font: "Courier",
+//     },
+//   }
+
+//   console.log(attendeeDetails)
+
+//   // var docDefinition = {
+//   //   content: [
+//   //     'First paragraph',
+//   //     'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+//   //   ],
+//   //   defaultStyle: {
+//   //     font: 'Helvetica'
+//   //   }
+//   // };
+
+//   // const fonts = {
+//   //   Roboto: {
+//   //     normal: "fonts/Roboto-Regular.ttf",
+//   //     bold: "fonts/Roboto-Medium.ttf",
+//   //     italics: "fonts/Roboto-Italic.ttf",
+//   //     bolditalics: "fonts/Roboto-MediumItalic.ttf",
+//   //   },
+//   // }
+
+//   // const fonts = {
+//   //   Courier: {
+//   //     normal: "Courier",
+//   //     bold: "Courier-Bold",
+//   //     italics: "Courier-Oblique",
+//   //     bolditalics: "Courier-BoldOblique",
+//   //   },
+//   // }
+
+//   const doc = printer.createPdfKitDocument(attendeeDetails)
+//   res.setHeader("Content-Type", "application/pdf")
+//   doc.pipe(res)
+//   doc.end()
+//   // doc.pipe(fs.createWriteStream("document3.pdf"))
+//   // doc.pipe(res)
+//   // doc.end()
+
+//   // const docAsStream = pdfDoc.createPdfKitDocument(docDefinition)
+
+//   // res.setHeader("Content-Type", `application/pdf`)
+//   // console.log(docAsStream)
+//   // docAsStream.pipe(res)
+//   // docAsStream.end()
+
+//   // if(!attendee.hasOWnProperty("pdf") {
+//   //   attendee.pdf = doc
+//   // })
+
+//   // const chunks = []
+//   // let result = null
+//   // doc.on("data", (chunk) => {
+//   //   chunks.push(chunk)
+//   // })
+//   // doc.on("end", () => {
+//   //   result = Buffer.concat(chunks)
+//   //   callback("data:application/pdf;base64," + result.toString("base64"))
+//   // })
+//   // doc.end()
+//   // res.contentType("application/pdf")
+//   // res.send(doc)
+
+//   console.log("endpoint here")
+// })
 
 module.exports = attendeesRouter
